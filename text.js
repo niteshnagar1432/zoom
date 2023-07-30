@@ -14,9 +14,10 @@ let AppProcess = (() => {
         camera: 1,
         screen: 2,
     }
-    var video_state = videoStates.camera
+    var video_state = videoStates.none
     var videoCamTrack;
     var serverProcess;
+    var audio;
 
     async function _init(SDP_FUNC, MY_CONNID) {
         serverProcess = SDP_FUNC;
@@ -37,7 +38,7 @@ let AppProcess = (() => {
             if (isAudioMute) {
                 audio.enabled = true
                 // $(this).html('') mute false button code here
-                // updateMediaSenders(audio,rtp_audio_senders);
+                updateMediaSenders(audio,rtp_audio_senders);
             } else {
                 audio.enabled = false
                 // $(this).html('') mute true button code here
@@ -83,7 +84,34 @@ let AppProcess = (() => {
         }
     }
 
+    function removeVideoSnders(rtp_senders){
+        for (var conn_id in peers_connection_ids) {
+            if(rtp_senders[conn_id] && connection_status(peers_connection[conn_id])){
+                peers_connection[conn_id].removeTrack(rtpSenders[conn_id]); //dout
+                rtp_senders[conn_id] = null;
+            }
+        }
+    }
+
+    function removeVideoStream(rtp_video_senders){
+        if(videoCamTrack){
+            videoCamTrack.stop();
+            videoCamTrack = null;
+            local_div.srcObject = null;
+            removeVideoSnders(rtp_video_senders);
+        }
+    }
+
     async function videoProcess(newState) {
+        if(newState == videoStates.none){
+            //video off btn code
+            video_state = newState;
+            removeVideoStream(rtp_video_senders);
+            return;
+        }
+        if(newState == videoStates.camera){
+            //video on btn code
+        }
         try {
             var vStream = null;
             if (newState == videoStates.camera) {
@@ -118,7 +146,10 @@ let AppProcess = (() => {
         }
         video_state = newState
     }
-    function loadAudio() { }
+
+    async function loadAudio() { 
+
+    }
 
     var iceConfigration = {
         iceServers: [
@@ -130,7 +161,6 @@ let AppProcess = (() => {
             }
         ]
     }
-
 
     async function setNewConnection(connnId) {
 
@@ -157,7 +187,7 @@ let AppProcess = (() => {
             }
             if (event.track.kind == 'video') {
                 remote_vid_stream[connnId]
-                    .getVideoTrackes()
+                    .getVideoTracks()
                     .forEach((t) => {
                         remote_vid_stream[connnId].removeTrack(t);
                     })
@@ -168,7 +198,7 @@ let AppProcess = (() => {
                 remoteVideoPlayer.load();
             } else if (event.track.kind == 'audio') {
                 remote_aud_stream[connnId]
-                    .getAudioTrackes()
+                    .getAudioTracks()
                     .forEach((t) => {
                         remote_aud_stream[connnId].removeTrack(t);
                     })
@@ -183,48 +213,56 @@ let AppProcess = (() => {
         peers_connection_ids[connnId] = connnId;
         peers_connection[connnId] = connection;
 
-        return connection;
         if (video_state == videoStates.camera || video_state == videoStates.screen) {
             if (videoCamTrack) {
                 updateMediaSenders(videoCamTrack, rtp_video_senders);
             }
         }
-    }
+        return connection;
+    } 
 
     async function setOffer(connnId) {
         var connection = peers_connection[connnId];
         var offer = await connection.createOffer();
-        connection.setLocalDescription(offer)
+        await connection.setLocalDescription(offer)
         serverProcess(JSON.stringify({
             offer: connection.localDescription,
         }), connnId);
     }
-
+ 
     async function SDPProcess(message, from_connid) {
         message = JSON.parse(message);
-        if (message.answer) {
-            await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.answer));
-        } else if (message.offer) {
-            if (!peers_connection[from_connid]) {
-                await setNewConnection(from_connid);
-            }
-            await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.offer));
-            var answer = await peers_connection[from_connid].createAnswer();
-            await peers_connection[from_connid].setLocalDescription(answer);
-            serverProcess(JSON.stringify({
-                answer: answer,
-            }), from_connid);
-        } else if (message.icecandidate) {
-            if (!peers_connection[from_connid]) {
-                await setNewConnection(from_connid);
-            }
-            try {
+        
+        try {
+            if (message.answer) {
+                if (peers_connection[from_connid] && peers_connection[from_connid].signalingState !== 'closed') {
+                    await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.answer));
+                }
+            } else if (message.offer) {
+                if (!peers_connection[from_connid] || peers_connection[from_connid].signalingState === 'closed') {
+                    await setNewConnection(from_connid);
+                }
+                
+                await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.offer));
+                const answer = await peers_connection[from_connid].createAnswer();
+                await peers_connection[from_connid].setLocalDescription(answer);
+                
+                await serverProcess(JSON.stringify({
+                    answer: answer,
+                }), from_connid);
+            } else if (message.icecandidate) {
+                if (!peers_connection[from_connid] || !peers_connection[from_connid].remoteDescription) {
+                    await setNewConnection(from_connid);
+                } 
+                
                 await peers_connection[from_connid].addIceCandidate(message.icecandidate);
-            } catch (error) {
-                console.log(error);
             }
+        } catch (error) {
+            console.log("Error in SDPProcess:", error);
         }
     }
+    
+    
 
 
 
@@ -236,7 +274,6 @@ let AppProcess = (() => {
             await _init(SDP_FUNC, MY_CONNID);
         },
         processClientFunc: async function (data, from_connid) {
-            // await SDPPrecess(data, from_connid);
             await SDPProcess(data, from_connid);
         },
     }
