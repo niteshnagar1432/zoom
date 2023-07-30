@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Meering Room</title>
+    <title>Meeting Room</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
-  <script>
-    var username = window.prompt('User Name...');
-    var meeting_code = <%= roomId %> ;
-    if(!username || !meeting_code){
-      window.location.assign('/');
-    }
-  </script>
   <body>
     <div class="container">
-      <video src="" muted autoplay id="local-vdo"></video>
-      <div class="box" id="cloneDiv" style="width: auto; padding: 10px; border: 2px solid black;border-radius: 5px;margin: 3px;">
-        <video autoplay muted id=""></video>
-        <audio id="" controls autoplay muted style="display: none;"></audio>
+      <video src muted autoplay id="local-vdo"></video>
+      <div class="box" id="cloneDiv"
+        style="width: auto; padding: 10px; border: 2px solid black;border-radius: 5px;margin: 3px;">
+        <video autoplay muted id></video>
+        <audio id controls autoplay style="display: none;"></audio>
         <h2>Dummy</h2>
       </div>
     </div>
@@ -32,10 +26,16 @@
       crossorigin="anonymous"></script>
     <script src="/javascripts/app.js"></script>
     <script>
-      $(document).ready(()=>{
-        $('.name').html(username);
-        MyApp._init(username,meeting_code);
-      });
-    </script>
+    var username = window.prompt('User Name...');
+    var meeting_code = '<%= roomId %>';
+    if (!username || !meeting_code) {
+      window.location.assign('/');
+    }
+
+    $(document).ready(() => {
+      $('.name').html(username);
+      MyApp._init(username, meeting_code);
+    });
+  </script>
   </body>
 </html>

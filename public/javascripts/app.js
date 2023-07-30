@@ -105,12 +105,14 @@ let AppProcess = (() => {
     async function videoProcess(newState) {
         if(newState == videoStates.none){
             //video off btn code
+            $('#video-cam-on-off').html('off camera')
             video_state = newState;
             removeVideoStream(rtp_video_senders);
             return;
         }
         if(newState == videoStates.camera){
             //video on btn code
+            $('#video-cam-on-off').html('camera')
         }
         try {
             var vStream = null;
@@ -144,11 +146,27 @@ let AppProcess = (() => {
             console.log(error)
             return;
         }
+
         video_state = newState
+
+        if(newState == videoStates.camera){
+            $('#video-cam-on-off').html('off camera')
+        }else if(newState == videoStates.screen){
+            $('#screen-share-on-off').html('stop presenting')
+        }
     }
 
     async function loadAudio() { 
-
+        try {
+            var astream = await navigator.mediaDevices.getUserMedia({
+                video:false,
+                audio:true
+            })
+            audio = astream.getAudioTracks()[0];
+            audio.enabled = false;
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     var iceConfigration = {
@@ -261,9 +279,25 @@ let AppProcess = (() => {
         }
     }
     
-
-
-
+    async function coloseConnection(conn_id){
+        peers_connection_ids[conn_id] = null
+        if(peers_connection[conn_id]){
+            peers_connection[conn_id].close();
+            peers_connection[conn_id] = null;
+        }
+        if(remote_aud_stream[conn_id]){
+            remote_aud_stream[conn_id].getTracks().forEach((t)=>{
+                if(t.stop) t.stop();
+            })
+            remote_aud_stream[conn_id] = null;
+        }
+        if(remote_vid_stream[conn_id]){
+            remote_vid_stream[conn_id].getTracks().forEach((t)=>{
+                if(t.stop) t.stop();
+            })
+            remote_vid_stream[conn_id] = null;
+        }
+    }
     return {
         setNewConnection: async function (connId) {
             await setNewConnection(connId);
@@ -273,6 +307,9 @@ let AppProcess = (() => {
         },
         processClientFunc: async function (data, from_connid) {
             await SDPProcess(data, from_connid);
+        },
+        coloseConnection: async function (conn_id) {
+            await coloseConnection(conn_id);
         },
     }
 
@@ -327,6 +364,12 @@ let MyApp = (() => {
                     console.log(error)
                 }
             }
+        })
+
+        socket.on('user_left',(data)=>{
+            console.log(data);
+            $('#'+data.disconnectedUser.currentSocket).remove();
+            AppProcess.coloseConnection(data.disconnectedUser.currentSocket);
         })
 
         socket.on('SDPProcess', async (data) => {

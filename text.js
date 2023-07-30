@@ -232,36 +232,34 @@ let AppProcess = (() => {
  
     async function SDPProcess(message, from_connid) {
         message = JSON.parse(message);
-        
-        try {
-            if (message.answer) {
-                if (peers_connection[from_connid] && peers_connection[from_connid].signalingState !== 'closed') {
-                    await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.answer));
-                }
-            } else if (message.offer) {
-                if (!peers_connection[from_connid] || peers_connection[from_connid].signalingState === 'closed') {
-                    await setNewConnection(from_connid);
-                }
-                
-                await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.offer));
-                const answer = await peers_connection[from_connid].createAnswer();
-                await peers_connection[from_connid].setLocalDescription(answer);
-                
-                await serverProcess(JSON.stringify({
-                    answer: answer,
-                }), from_connid);
-            } else if (message.icecandidate) {
-                if (!peers_connection[from_connid] || !peers_connection[from_connid].remoteDescription) {
-                    await setNewConnection(from_connid);
-                } 
-                
-                await peers_connection[from_connid].addIceCandidate(message.icecandidate);
+        if (message.answer) {
+            if (peers_connection[from_connid] && peers_connection[from_connid].signalingState !== 'closed') {
+                await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.answer))
+                .catch((error)=>{
+                    console.log('some error');
+                })
             }
-        } catch (error) {
-            console.log("Error in SDPProcess:", error);
+        } else if (message.offer) {
+            if (!peers_connection[from_connid] || peers_connection[from_connid].signalingState === 'closed') {
+                await setNewConnection(from_connid);
+            }
+            await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.offer));
+            var answer = await peers_connection[from_connid].createAnswer();
+            await peers_connection[from_connid].setLocalDescription(answer);
+            serverProcess(JSON.stringify({
+                answer: answer,
+            }), from_connid);
+        } else if (message.icecandidate) {
+            if (!peers_connection[from_connid] && !peers_connection[from_connid].remoteDescription) {
+                await setNewConnection(from_connid);
+            } 
+            try {
+                await peers_connection[from_connid].addIceCandidate(message.icecandidate);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
-    
     
 
 

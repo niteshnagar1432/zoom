@@ -45,6 +45,38 @@ io.on("connection", function (socket) {
     })
   })
 
+  socket.on('disconnect', () => {
+    console.log('user Disconnected');
+  
+    var disConnectUser = userConnections.find((user) => {
+      return user.currentSocket == socket.id;
+    });
+  
+    if (disConnectUser) {
+      var connectionId = disConnectUser.roomId;
+      console.log(connectionId);
+  
+      var remainingUsers = userConnections.filter((u) => {
+        return u.currentSocket != disConnectUser.currentSocket;
+      });
+  
+      console.log(disConnectUser);
+  
+      // Send 'user_left' event to remaining users in the same room
+      var list = remainingUsers.filter((user) => {
+        return user.roomId == connectionId;
+      });
+  
+      list.forEach((user) => {
+        io.to(user.currentSocket).emit('user_left', { disconnectedUser: disConnectUser });
+      });
+  
+      // Remove the disconnected user from the userConnections array
+      userConnections = remainingUsers;
+    }
+  });
+  
+
 });
 
 // end of socket.io logic
