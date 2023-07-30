@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creat Or Join Meeting</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="new-metting">
+            New Meeting.
+        </div>
+        <div class="join-metting">
+            <input class="meeting-code" type="text" placeholder="Enter Code..">
+            <button class="join-btn">Join</button>
+        </div>
+    </div>   
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(()=>{
+            $('.join-btn').on('click',()=>{
+                let meeting_code = $('.meeting-code').val();
+                window.location.assign(`/room/${meeting_code}`);
+            });
+            $('.new-metting').on('click',()=>{
+                let meeting_code = Math.floor(Math.random() * 100000000);
+                window.location.assign('/room/'+meeting_code);
+            });
+        })
+    </script> 
+</body>
+</html>

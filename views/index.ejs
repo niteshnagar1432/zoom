@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Meering Room</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <script>
+    var username = window.prompt('User Name...');
+    var meeting_code = <%= roomId %> ;
+    if(!username || !meeting_code){
+      window.location.assign('/');
+    }
+  </script>
+  <body>
+    <div class="container">
+      <video src="" muted autoplay id="local-vdo"></video>
+      <div class="box" id="cloneDiv" style="width: auto; padding: 10px; border: 2px solid black;border-radius: 5px;margin: 3px;">
+        <video autoplay muted id=""></video>
+        <audio id="" controls autoplay muted style="display: none;"></audio>
+        <h2>Dummy</h2>
+      </div>
+    </div>
+    <button id="video-cam-on-off">camera</button>
+    <button id="micMuteUnmute">mic</button>
+    <button id="screen-share-on-off">screen</button>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.js"
+      integrity="sha512-Z6C1p1NIexPj5MsVUunW4pg7uMX6/TT3CUVldmjXx2kpip1eZcrAnxIusDxyFIikyM9A61zOVNgvLr/TGudOQg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"></script>
+    <script src="/javascripts/app.js"></script>
+    <script>
+      $(document).ready(()=>{
+        $('.name').html(username);
+        MyApp._init(username,meeting_code);
+      });
+    </script>
+  </body>
+</html>
