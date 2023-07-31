@@ -1,0 +1,324 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(33, 33, 63);
+    position: relative;
+}
+
+.container {
+    width: 100vw;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 20px;
+}
+
+.container .left {
+    width: 75vw;
+    height: 100%;
+    border: 2px solid #928c8c;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.container .left .display-none {
+    width: 100%;
+    height: 100%;
+    background-color: #3f3b3b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container .left .display-none i {
+    font-size: 42px;
+    color: #d4cccc;
+    padding: 30px 32px;
+    background-color: #151414a1;
+    border-radius: 10px;
+    font-weight: 300;
+    border: 5px solid #a0999928;
+}
+
+.container .left video {
+    width: 100%;
+    height: 100%;
+    /* display: none; */
+}
+
+.container .right {
+    width: calc(100vw - 75vw);
+    height: 100%;
+    overflow-y: auto;
+}
+
+.container .right .inner-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+}
+
+.container .right .inner-container .profile {
+    width: 100%;
+    height: 180px;
+    background-color: black;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.container .right .inner-container .profile video {
+    width: 100%;
+    height: 100%;
+}
+
+.container .right .inner-container .profile .name {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px;
+    background-color: #a49a9a9a;
+}
+
+.container .right .inner-container .profile .tols {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.container .right .inner-container .profile .tols>i {
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 50%;
+    color: #000000;
+    background-color: rgb(117, 112, 112);
+    margin-left: 5px;
+    user-select: none;
+}
+
+.container .right::-webkit-scrollbar {
+    display: none;
+}
+
+.bottom {
+    border-top: 1.5px solid #3f3b3b;
+    padding-top: 3px;
+    width: 100vw;
+    height: 10vh;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 30px;
+}
+
+.bottom .meeting-details {
+    color: #fff;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+}
+
+.bottom .meeting-details:hover {
+    transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-bottom: .5px solid #817a7a;
+    cursor: pointer;
+}
+
+.bottom .meeting-details i {
+    font-size: 22px;
+}
+
+.bottom .actions {
+    display: flex;
+    gap: 10px;
+    padding: 2px 20px;
+}
+
+.bottom .actions i {
+    font-size: 22px;
+    font-weight: 500;
+    color: #fff;
+    padding: 10px;
+    background-color: #817a7a;
+    border-radius: 50%;
+}
+
+.bottom .actions i:hover {
+    background-color: #fff;
+    color: #000000;
+    cursor: pointer;
+    transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bottom .actions i.ri-phone-line {
+    background-color: red;
+}
+
+.bottom .members i {
+    font-size: 22px;
+    font-weight: 500;
+    color: #fff;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.bottom .members i:hover {
+    background-color: #817a7a;
+    cursor: pointer;
+    transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.none {
+    display: none !important;
+}
+
+
+.container .right .msg-container {
+    position: absolute;
+    bottom: 10vh;
+    right: 0;
+    width: 25vw;
+    height: 90vh;
+    background-color: #21213F;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    overflow: hidden;
+    border: 1px solid antiquewhite;
+    border-bottom: none;
+    z-index: 1;
+}
+
+.active{
+    background-color: #817a7a;
+}
+
+.container .right .msg-container .header {
+    width: 100%;
+    height: 10vh;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 20px;
+    color: #fff;
+}
+
+.container .right .msg-container .header i {
+    font-size: 22px;
+    color: red !important;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.container .right .msg-container .body {
+    width: 100%;
+    height: 70vh;
+    padding: 5px 10px;
+    overflow-y: scroll;
+    background-color: #817a7a3e;
+}
+.container .right .msg-container .body::-webkit-scrollbar{
+    display: none;
+}
+
+.container .right .msg-container .body .inner-body {
+    display: flex;
+    flex-direction: column;
+    align-items: first end;
+    gap: 5px;
+}
+
+.container .right .msg-container .body .inner-body .recive {
+    background-color: #202C33;
+    align-self: flex-start;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    max-width: 70%;
+}
+.container .right .msg-container .body .inner-body .recive .msg{
+    padding: 5px 0px;
+}
+.container .right .msg-container .body .inner-body .recive .time{
+    font-size: 10px;
+    display: none;
+}
+.container .right .msg-container .body .inner-body .recive:hover + .time{
+    display: block;
+}
+.container .right .msg-container .body .inner-body .recive .sender{
+    font-size: 12px;
+}
+
+.container .right .msg-container .body .inner-body .sent {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #005C4B;
+    align-self: flex-end;
+    max-width: 70%;
+}
+
+sup{
+    color: #fff;
+}
+
+.black{
+    color: #000000;
+}
+
+.container .right .msg-container .bottom {
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 15px;
+    gap: 5px;
+    color: #d4cccc;
+}
+
+.container .right .msg-container .bottom .input-f {
+    width: 90%;
+    height: 100%;
+    background-color: #928c8c;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.container .right .msg-container .bottom .input-f input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    color: #fff;
+    font-size: 18px;
+}
+
+.container .right .msg-container .bottom i {
+    font-size: 24px;
+    cursor: pointer;
+}

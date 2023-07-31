@@ -19,10 +19,12 @@ io.on("connection", function (socket) {
       displayName: data.displayName,
       roomId: data.roomId
     });
-
+    let userCount = userConnections.length;
+    console.log(userCount);
     io.emit('other_info_meeting', {
       otherUserId: data.displayName,
-      connId: socket.id
+      connId: socket.id,
+      userCount:userCount
     })
 
     socket.emit('infom_me_about_outher', {otherUsers})
@@ -30,7 +32,8 @@ io.on("connection", function (socket) {
     otherUsers.forEach(other => {
       io.to(socket.id).emit('other_info_meeting', {
         otherUserId: other.displayName,
-        connId: other.currentSocket
+        connId: other.currentSocket,
+        userCount:userCount
       });
     });
 
@@ -43,6 +46,31 @@ io.on("connection", function (socket) {
       message: data.message,
       from_connid: socket.id
     })
+  })
+
+  socket.on('sendMessage',(data)=>{
+    console.log(data);
+    let mUser = userConnections.find((user)=>{
+      return user.currentSocket == socket.id;
+    })
+    if(mUser){
+      let roomId = mUser.roomId;
+      let from = mUser.displayName;
+      let senderSocket = mUser.currentSocket;
+      let list = userConnections.filter((user)=>{
+        return user.roomId == roomId;
+      })
+
+      list.forEach((user)=>{
+        if(user.currentSocket != senderSocket){
+          io.to(user.currentSocket).emit('newMessage',{sender:from,msg:data});
+        }else{
+          io.to(user.currentSocket).emit('selfMessage',{sender:from,msg:data});
+        }
+      })
+
+    }
+
   })
 
   socket.on('disconnect', () => {
@@ -66,9 +94,9 @@ io.on("connection", function (socket) {
       var list = remainingUsers.filter((user) => {
         return user.roomId == connectionId;
       });
-  
+      let userCount = remainingUsers.length;
       list.forEach((user) => {
-        io.to(user.currentSocket).emit('user_left', { disconnectedUser: disConnectUser });
+        io.to(user.currentSocket).emit('user_left', { disconnectedUser: disConnectUser,userCount:userCount });
       });
   
       // Remove the disconnected user from the userConnections array

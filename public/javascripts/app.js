@@ -37,10 +37,13 @@ let AppProcess = (() => {
             }
             if (isAudioMute) {
                 audio.enabled = true
-                // $(this).html('') mute false button code here
+                $('#micMuteUnmute').removeClass('ri-mic-off-fill');
+                $('#micMuteUnmute').addClass('ri-mic-2-line');
                 updateMediaSenders(audio,rtp_audio_senders);
             } else {
                 audio.enabled = false
+                $('#micMuteUnmute').removeClass('ri-mic-2-line');
+                $('#micMuteUnmute').addClass('ri-mic-off-fill');
                 // $(this).html('') mute true button code here
                 removeMediaSenders(rtp_audio_senders);
             }
@@ -105,14 +108,19 @@ let AppProcess = (() => {
     async function videoProcess(newState) {
         if(newState == videoStates.none){
             //video off btn code
-            $('#video-cam-on-off').html('off camera')
+            $('#local-vdo').addClass('none');
+            $('.display-none').removeClass('none');
+            $('#video-cam-on-off').addClass('ri-camera-off-line');
             video_state = newState;
             removeVideoStream(rtp_video_senders);
             return;
         }
         if(newState == videoStates.camera){
             //video on btn code
-            $('#video-cam-on-off').html('camera')
+            $('#local-vdo').removeClass('none');
+            $('.display-none').addClass('none');
+            $('#video-cam-on-off').removeClass('ri-camera-line');
+            $('#video-cam-on-off').addClass('ri-camera-off-line')
         }
         try {
             var vStream = null;
@@ -120,7 +128,7 @@ let AppProcess = (() => {
                 vStream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         height: 1920,
-                        width: 1080
+                        width: 2480
                     },
                     audio: false
                 })
@@ -150,9 +158,11 @@ let AppProcess = (() => {
         video_state = newState
 
         if(newState == videoStates.camera){
-            $('#video-cam-on-off').html('off camera')
+            $('#video-cam-on-off').addClass('ri-camera-line');
+            $('#video-cam-on-off').removeClass('ri-camera-off-line');
         }else if(newState == videoStates.screen){
-            $('#screen-share-on-off').html('stop presenting')
+            $('#screen-share-on-off').toggleClass('active');
+            $('#screen-share-on-off').toggleClass('black');
         }
     }
 
@@ -325,6 +335,7 @@ let MyApp = (() => {
         meeting_id = mid;
         event_progress_for_singnle();
         document.title = "Room :- " + meeting_id;
+        eventHandling();
     }
 
     function event_progress_for_singnle() {
@@ -349,6 +360,7 @@ let MyApp = (() => {
                 console.log(user)
                 addUser(user.otherUserId, user.connId);
                 AppProcess.setNewConnection(user.connId);
+                document.querySelector('.roomMembers').innerHTML = user.userCount;
             }
         })
 
@@ -357,19 +369,19 @@ let MyApp = (() => {
                 try {
                     for (let index = 0; index < other_users.length; index++) {
                         addUser(other_users[index].displayName, other_users[index].roomId);
-                        console.log(other_users[index].displayName);
                         AppProcess.setNewConnection(other_users[index].roomId);
+                        document.querySelector('.roomMembers').innerHTML = other_users[index].userCount;
                     }
                 } catch (error) {
                     console.log(error)
                 }
             }
         })
-
+        
         socket.on('user_left',(data)=>{
-            console.log(data);
             $('#'+data.disconnectedUser.currentSocket).remove();
             AppProcess.coloseConnection(data.disconnectedUser.currentSocket);
+            document.querySelector('.roomMembers').innerHTML = data.userCount;
         })
 
         socket.on('SDPProcess', async (data) => {
@@ -377,13 +389,52 @@ let MyApp = (() => {
         })
     }
 
+    socket.on('newMessage',(data)=>{
+        let time = new Date();
+        let nTime = time.toLocaleString('en-US',{
+            hour:'numeric',
+            minute:'numeric',
+            hour12:true
+        });
+
+        let msgContainer = document.querySelector('.newMessageApairHere');
+        let newMsg = `<div class="recive">
+            <div class="sender">${data.sender}</div>
+            <div class="msg">${data.msg}</div>
+            <div class="time">${nTime}</div>
+        </div>`;
+        msgContainer.innerHTML += newMsg;
+    })
+
+    socket.on('selfMessage',(data)=>{
+        let time = new Date();
+        let nTime = time.toLocaleString('en-US',{
+            hour:'numeric',
+            minute:'numeric',
+            hour12:true
+        });
+        let msgContainer = document.querySelector('.newMessageApairHere');
+        let newMsg = `<div class="sent">${data.msg}</div>`;
+        msgContainer.innerHTML += newMsg;
+    })
+
+    function eventHandling() {
+        $('#msg-Sent-Btn').on('click',()=>{
+           let msgValue =  $('#msg-Sent-Input').val();
+           socket.emit('sendMessage',msgValue);
+           $('#msg-Sent-Input').val('');
+        })
+    }
+
     function addUser(otherUserId, connId) {
         let newDiv = $('#cloneDiv').clone();
         newDiv = newDiv.attr('id', connId).addClass('other');
-        newDiv.find('h2').text(otherUserId);
+        newDiv.find('h4').text(otherUserId);
         newDiv.find('video').attr('id', "v_" + connId);
         newDiv.find('audio').attr('id', "a_" + connId);
-        $('.container').append(newDiv);
+        newDiv.show();
+        $('.inner-container').append(newDiv);
+        otherUserId = '';
     }
 
     return {

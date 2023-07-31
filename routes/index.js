@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/room/:id',(req,res)=>{
   let roomId = req.params.id;
-  res.render('index',{roomId});
+  res.render('home-c',{roomId});
 })
 
 module.exports = router;
