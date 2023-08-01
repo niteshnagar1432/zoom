@@ -382,6 +382,7 @@ let MyApp = (() => {
             $('#'+data.disconnectedUser.currentSocket).remove();
             AppProcess.coloseConnection(data.disconnectedUser.currentSocket);
             document.querySelector('.roomMembers').innerHTML = data.userCount;
+            $('#profile_'+data.disconnectedUser.currentSocket).remove();
         })
 
         socket.on('SDPProcess', async (data) => {
@@ -427,13 +428,16 @@ let MyApp = (() => {
     }
 
     function addUser(otherUserId, connId) {
-        let newDiv = $('#cloneDiv').clone();
-        newDiv = newDiv.attr('id', connId).addClass('other');
-        newDiv.find('h4').text(otherUserId);
-        newDiv.find('video').attr('id', "v_" + connId);
-        newDiv.find('audio').attr('id', "a_" + connId);
-        newDiv.show();
-        $('.inner-container').append(newDiv);
+        
+        let userLiveContainer = document.querySelector('#userLiveContainer');
+        let user = `<div class="profile" id="${connId}">
+            <div class="name"><h4>${otherUserId}</h4></div>
+            <video id="v_${connId}" src="" muted autoplay></video>
+            <audio id="a_${connId}" controls autoplay style="display: none;"></audio>
+            <div class="tols"><i class="ri-mic-line"></i><i class="ri-camera-line"></i></div>
+        </div>`;
+        userLiveContainer.innerHTML += user;
+
         let roomMembersContainer = document.querySelector('#room-Members_here');
         let profile = `<div class="profile" id="profile_${connId}">
         <div class="user_detailes">
