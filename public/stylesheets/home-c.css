@@ -194,6 +194,7 @@ body {
 }
 
 
+.container .right .member-container,
 .container .right .msg-container {
     position: absolute;
     bottom: 10vh;
@@ -213,6 +214,7 @@ body {
     background-color: #817a7a;
 }
 
+.container .right .member-container .header,
 .container .right .msg-container .header {
     width: 100%;
     height: 10vh;
@@ -224,11 +226,76 @@ body {
     color: #fff;
 }
 
+.container .right .member-container .header i,
 .container .right .msg-container .header i {
     font-size: 22px;
     color: red !important;
     cursor: pointer;
     padding: 5px;
+}
+.container .right .member-container .body{
+    width: 100%;
+    height: 80vh;
+    padding: 5px 10px;
+    overflow-y: scroll;
+    background-color: #817a7a3e;
+}
+.container .right .member-container .body::-webkit-scrollbar{
+    display: none;
+}
+.container .right .member-container .body .inner-body{
+    display: flex;
+    flex-direction: column;
+    align-items: first end;
+    gap: 5px;
+    padding: 5px 5px;
+}
+.container .right .member-container .body .inner-body .profile{
+    width: 100%;
+    height: 10vh;
+    background-color: blanchedalmond;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 15px;
+    box-shadow: 2px 5px 10px black;
+}
+.container .right .member-container .body .inner-body .profile:hover{
+    cursor: pointer;
+    background-color: #d4cccc;
+}
+.container .right .member-container .body .inner-body .profile .user_detailes{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.container .right .member-container .body .inner-body .profile .user_detailes img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 1.5px solid #3f3b3b;
+}
+.container .right .member-container .body .inner-body .profile .user_detailes .name{
+    color: #000000;
+    font-weight: 900;
+}
+.container .right .member-container .body .inner-body .profile .actions{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+.container .right .member-container .body .inner-body .profile .actions i{
+    font-size: 22px;
+    cursor: pointer;
+}
+.container .right .member-container .body .inner-body .profile .actions i.ri-unpin-line{
+    color: red;
 }
 
 .container .right .msg-container .body {

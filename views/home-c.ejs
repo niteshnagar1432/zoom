@@ -20,7 +20,7 @@
             <div class="msg-container" style="display: none;">
                 <div class="header">
                     <span class="room-name">Room :- 78378829</span>
-                    <i class="ri-close-circle-line"></i>
+                    <i class="ri-close-circle-line messageToggle"></i>
                 </div>
                 <div class="body">
                     <div class="inner-body newMessageApairHere">
@@ -30,6 +30,36 @@
                 <div class="bottom">
                     <div class="input-f"><input id="msg-Sent-Input" type="text" placeholder="Comment..."></div>
                     <i id="msg-Sent-Btn" class="ri-send-plane-fill"></i>
+                </div>
+            </div>
+            <div class="member-container" style="display: none;">
+                <div class="header">
+                    <span class="room-name">Member's</span>
+                    <i class="ri-close-circle-line memberToggle"></i>
+                </div>
+                <div class="body">
+                    <div class="inner-body" id="room-Members_here">
+                        <div class="profile">
+                            <div class="user_detailes">
+                                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="">
+                                <div class="name">You</div>
+                            </div>
+                            <div class="actions">
+                                <i class="ri-more-2-fill"></i>
+                                <i class="ri-unpin-line"></i>
+                            </div>
+                        </div>
+                        <div class="profile">
+                            <div class="user_detailes">
+                                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="">
+                                <div class="name">Nitesh Nagar</div>
+                            </div>
+                            <div class="actions">
+                                <i class="ri-more-2-fill"></i>
+                                <i class="ri-pushpin-line"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="inner-container">
@@ -45,7 +75,7 @@
     <div class="bottom">
         <div class="meeting-details">Mitting Info <i class="ri-arrow-drop-up-line"></i></div>
         <div class="actions"><i class="ri-mic-off-fill"id="micMuteUnmute"></i><i class="ri-phone-line"></i><i class="ri-camera-off-line" id="video-cam-on-off"></i><i class="ri-tv-2-line" id="screen-share-on-off"></i></div>
-        <div class="members"><i class="ri-message-3-line"></i><i class="ri-group-line"></i><sup class="roomMembers">1</sup></div>
+        <div class="members"><i class="ri-message-3-line messageToggle"></i><i class="ri-group-line memberToggle"></i><sup class="roomMembers">1</sup></div>
     </div>
     <script
     src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.js"
@@ -64,13 +94,14 @@
         $(document).ready(() => {
             $('.name').html(username);
             MyApp._init(username, meeting_code);
-            $('.ri-message-3-line').on('click',()=>{
+            $('.messageToggle').on('click',()=>{
                 $('.ri-message-3-line').toggleClass('active');
                 $('.msg-container').slideToggle('slow');
             })
-            $('.ri-close-circle-line').on('click',()=>{
-                $('.ri-message-3-line').toggleClass('active');
-                $('.msg-container').slideToggle('slow');
+            
+            $('.memberToggle').on('click',()=>{
+                $('.ri-group-line').toggleClass('active');
+                $('.member-container').slideToggle('slow');
             })
         });
     </script>

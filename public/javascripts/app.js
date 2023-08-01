@@ -434,7 +434,18 @@ let MyApp = (() => {
         newDiv.find('audio').attr('id', "a_" + connId);
         newDiv.show();
         $('.inner-container').append(newDiv);
-        otherUserId = '';
+        let roomMembersContainer = document.querySelector('#room-Members_here');
+        let profile = `<div class="profile" id="profile_${connId}">
+        <div class="user_detailes">
+            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="">
+            <div class="name">${otherUserId}</div>
+        </div>
+        <div class="actions">
+            <i class="ri-more-2-fill"></i>
+            <i class="ri-pushpin-line"></i>
+        </div>
+    </div>`;
+    roomMembersContainer.innerHTML += profile;
     }
 
     return {
