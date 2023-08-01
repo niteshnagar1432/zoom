@@ -452,6 +452,18 @@ let MyApp = (() => {
     roomMembersContainer.innerHTML += profile;
     }
 
+    $('.end-mitting').on('click',()=>{
+        $('.leave-container').fadeIn('fast');
+    })
+
+    $('.cancel').on('click',()=>{
+        $('.leave-container').fadeOut('fast');
+    })
+
+    $('.leave').on('click',()=>{
+        window.location.assign('/');
+    })
+
     return {
         _init: function (uid, mid) {
             init(uid, mid)

@@ -389,3 +389,50 @@ sup{
     font-size: 24px;
     cursor: pointer;
 }
+
+.leave-container{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #21213f82;
+    z-index: 111;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+.leave-container .leave-box{
+    width: 35vw;
+    height: 40vh;
+    border: 2px solid rgb(130, 50, 50);
+    border-radius: 5px;
+    background-color: #21213F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 3px 10px 30px rgb(54, 51, 51);
+}
+.leave-container .leave-box h1{
+    color: #fff;
+}
+.leave-container .leave-box .btn{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+.leave-container .leave-box .btn button{
+    margin-top: 6vh;
+    padding: 1.5vh 5vh;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+.leave-container .leave-box .btn button.leave{
+    background-color: red;
+    color: #fff;
+}
