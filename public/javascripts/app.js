@@ -18,6 +18,7 @@ let AppProcess = (() => {
     var videoCamTrack;
     var serverProcess;
     var audio;
+    var screen = false;
 
     async function _init(SDP_FUNC, MY_CONNID) {
         serverProcess = SDP_FUNC;
@@ -44,7 +45,6 @@ let AppProcess = (() => {
                 audio.enabled = false
                 $('#micMuteUnmute').removeClass('ri-mic-2-line');
                 $('#micMuteUnmute').addClass('ri-mic-off-fill');
-                // $(this).html('') mute true button code here
                 removeMediaSenders(rtp_audio_senders);
             }
             isAudioMute = !isAudioMute;
@@ -61,8 +61,12 @@ let AppProcess = (() => {
         $('#screen-share-on-off').on('click', async () => {
             if (video_state == videoStates.screen) {
                 await videoProcess(videoStates.none);
+                $('.display-none').removeClass('none');
+                $('.local-vdo').addClass('none');
             } else {
                 await videoProcess(videoStates.screen);
+                $('.display-none').addClass('none');
+                $('.local-vdo').removeClass('none');
             }
         })
     }
@@ -122,6 +126,13 @@ let AppProcess = (() => {
             $('#video-cam-on-off').removeClass('ri-camera-line');
             $('#video-cam-on-off').addClass('ri-camera-off-line')
         }
+
+        if(newState == videoStates.screen){
+            $('#local-vdo').removeClass('none');
+            $('.display-none').addClass('none');
+            $('.screen-share-on-off').addClass('active');
+        }
+
         try {
             var vStream = null;
             if (newState == videoStates.camera) {
