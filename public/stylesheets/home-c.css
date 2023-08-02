@@ -436,3 +436,30 @@ sup{
     background-color: red;
     color: #fff;
 }
+
+.stopRecord{
+    color: red !important;
+    background-color: #713333 !important;
+    font-weight: bold;
+}
+.recording-indicater{
+    position: absolute;
+    top: 5vh;
+    left: 5vw;
+    padding: 5px 10px;
+    background-color: #615c5c;
+    z-index: 1111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 5px;
+}
+.recording-indicater i{
+    font-size: 27px;
+    color: red;
+    border-radius: 50%;
+}
+.recording-indicater h4{
+    color: #888080;
+}

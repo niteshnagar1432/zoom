@@ -39,7 +39,7 @@ let AppProcess = (() => {
                 audio.enabled = true
                 $('#micMuteUnmute').removeClass('ri-mic-off-fill');
                 $('#micMuteUnmute').addClass('ri-mic-2-line');
-                updateMediaSenders(audio,rtp_audio_senders);
+                updateMediaSenders(audio, rtp_audio_senders);
             } else {
                 audio.enabled = false
                 $('#micMuteUnmute').removeClass('ri-mic-2-line');
@@ -87,17 +87,17 @@ let AppProcess = (() => {
         }
     }
 
-    function removeVideoSnders(rtp_senders){
+    function removeVideoSnders(rtp_senders) {
         for (var conn_id in peers_connection_ids) {
-            if(rtp_senders[conn_id] && connection_status(peers_connection[conn_id])){
+            if (rtp_senders[conn_id] && connection_status(peers_connection[conn_id])) {
                 peers_connection[conn_id].removeTrack(rtpSenders[conn_id]); //dout
                 rtp_senders[conn_id] = null;
             }
         }
     }
 
-    function removeVideoStream(rtp_video_senders){
-        if(videoCamTrack){
+    function removeVideoStream(rtp_video_senders) {
+        if (videoCamTrack) {
             videoCamTrack.stop();
             videoCamTrack = null;
             local_div.srcObject = null;
@@ -106,7 +106,7 @@ let AppProcess = (() => {
     }
 
     async function videoProcess(newState) {
-        if(newState == videoStates.none){
+        if (newState == videoStates.none) {
             //video off btn code
             $('#local-vdo').addClass('none');
             $('.display-none').removeClass('none');
@@ -115,7 +115,7 @@ let AppProcess = (() => {
             removeVideoStream(rtp_video_senders);
             return;
         }
-        if(newState == videoStates.camera){
+        if (newState == videoStates.camera) {
             //video on btn code
             $('#local-vdo').removeClass('none');
             $('.display-none').addClass('none');
@@ -157,20 +157,20 @@ let AppProcess = (() => {
 
         video_state = newState
 
-        if(newState == videoStates.camera){
+        if (newState == videoStates.camera) {
             $('#video-cam-on-off').addClass('ri-camera-line');
             $('#video-cam-on-off').removeClass('ri-camera-off-line');
-        }else if(newState == videoStates.screen){
+        } else if (newState == videoStates.screen) {
             $('#screen-share-on-off').toggleClass('active');
             $('#screen-share-on-off').toggleClass('black');
         }
     }
 
-    async function loadAudio() { 
+    async function loadAudio() {
         try {
             var astream = await navigator.mediaDevices.getUserMedia({
-                video:false,
-                audio:true
+                video: false,
+                audio: true
             })
             audio = astream.getAudioTracks()[0];
             audio.enabled = false;
@@ -180,8 +180,7 @@ let AppProcess = (() => {
     }
 
     var iceConfigration = {
-        iceServers: [
-            {
+        iceServers: [{
                 urls: 'stun:stun.l.google.com:19302'
             },
             {
@@ -247,7 +246,7 @@ let AppProcess = (() => {
             }
         }
         return connection;
-    } 
+    }
 
     async function setOffer(connnId) {
         var connection = peers_connection[connnId];
@@ -257,15 +256,15 @@ let AppProcess = (() => {
             offer: connection.localDescription,
         }), connnId);
     }
- 
+
     async function SDPProcess(message, from_connid) {
         message = JSON.parse(message);
         if (message.answer) {
             if (peers_connection[from_connid] && peers_connection[from_connid].signalingState !== 'closed') {
                 await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(message.answer))
-                .catch((error)=>{
-                    console.log('some error');
-                })
+                    .catch((error) => {
+                        console.log('some error');
+                    })
             }
         } else if (message.offer) {
             if (!peers_connection[from_connid] || peers_connection[from_connid].signalingState === 'closed') {
@@ -280,7 +279,7 @@ let AppProcess = (() => {
         } else if (message.icecandidate) {
             if (!peers_connection[from_connid] && !peers_connection[from_connid].remoteDescription) {
                 await setNewConnection(from_connid);
-            } 
+            }
             try {
                 await peers_connection[from_connid].addIceCandidate(message.icecandidate);
             } catch (error) {
@@ -288,22 +287,22 @@ let AppProcess = (() => {
             }
         }
     }
-    
-    async function coloseConnection(conn_id){
+
+    async function coloseConnection(conn_id) {
         peers_connection_ids[conn_id] = null
-        if(peers_connection[conn_id]){
+        if (peers_connection[conn_id]) {
             peers_connection[conn_id].close();
             peers_connection[conn_id] = null;
         }
-        if(remote_aud_stream[conn_id]){
-            remote_aud_stream[conn_id].getTracks().forEach((t)=>{
-                if(t.stop) t.stop();
+        if (remote_aud_stream[conn_id]) {
+            remote_aud_stream[conn_id].getTracks().forEach((t) => {
+                if (t.stop) t.stop();
             })
             remote_aud_stream[conn_id] = null;
         }
-        if(remote_vid_stream[conn_id]){
-            remote_vid_stream[conn_id].getTracks().forEach((t)=>{
-                if(t.stop) t.stop();
+        if (remote_vid_stream[conn_id]) {
+            remote_vid_stream[conn_id].getTracks().forEach((t) => {
+                if (t.stop) t.stop();
             })
             remote_vid_stream[conn_id] = null;
         }
@@ -377,12 +376,12 @@ let MyApp = (() => {
                 }
             }
         })
-        
-        socket.on('user_left',(data)=>{
-            $('#'+data.disconnectedUser.currentSocket).remove();
+
+        socket.on('user_left', (data) => {
+            $('#' + data.disconnectedUser.currentSocket).remove();
             AppProcess.coloseConnection(data.disconnectedUser.currentSocket);
             document.querySelector('.roomMembers').innerHTML = data.userCount;
-            $('#profile_'+data.disconnectedUser.currentSocket).remove();
+            $('#profile_' + data.disconnectedUser.currentSocket).remove();
         })
 
         socket.on('SDPProcess', async (data) => {
@@ -390,12 +389,12 @@ let MyApp = (() => {
         })
     }
 
-    socket.on('newMessage',(data)=>{
+    socket.on('newMessage', (data) => {
         let time = new Date();
-        let nTime = time.toLocaleString('en-US',{
-            hour:'numeric',
-            minute:'numeric',
-            hour12:true
+        let nTime = time.toLocaleString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
         });
 
         let msgContainer = document.querySelector('.newMessageApairHere');
@@ -407,12 +406,12 @@ let MyApp = (() => {
         msgContainer.innerHTML += newMsg;
     })
 
-    socket.on('selfMessage',(data)=>{
+    socket.on('selfMessage', (data) => {
         let time = new Date();
-        let nTime = time.toLocaleString('en-US',{
-            hour:'numeric',
-            minute:'numeric',
-            hour12:true
+        let nTime = time.toLocaleString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
         });
         let msgContainer = document.querySelector('.newMessageApairHere');
         let newMsg = `<div class="sent">${data.msg}</div>`;
@@ -420,15 +419,39 @@ let MyApp = (() => {
     })
 
     function eventHandling() {
-        $('#msg-Sent-Btn').on('click',()=>{
-           let msgValue =  $('#msg-Sent-Input').val();
-           socket.emit('sendMessage',msgValue);
-           $('#msg-Sent-Input').val('');
+        $('#msg-Sent-Btn').on('click', () => {
+            let msgValue = $('#msg-Sent-Input').val();
+            socket.emit('sendMessage', msgValue);
+            $('#msg-Sent-Input').val('');
         })
+        $('.end-mitting').on('click', () => {
+            $('.leave-container').fadeIn('fast');
+        })
+
+        $('.cancel').on('click', () => {
+            $('.leave-container').fadeOut('fast');
+        })
+
+        $('.leave').on('click', () => {
+            window.location.assign('/');
+        })
+
+        $('#userLiveContainer').on('dblclick', 'video', function () {
+            const videoElement = this; // Get the actual DOM video element
+            if (videoElement.requestFullscreen) {
+                videoElement.requestFullscreen();
+            } else if (videoElement.mozRequestFullScreen) {
+                videoElement.mozRequestFullScreen();
+            } else if (videoElement.webkitRequestFullscreen) {
+                videoElement.webkitRequestFullscreen();
+            } else if (videoElement.msRequestFullscreen) {
+                videoElement.msRequestFullscreen();
+            }
+        });
     }
 
     function addUser(otherUserId, connId) {
-        
+
         let userLiveContainer = document.querySelector('#userLiveContainer');
         let user = `<div class="profile" id="${connId}">
             <div class="name"><h4>${otherUserId}</h4></div>
@@ -449,20 +472,68 @@ let MyApp = (() => {
             <i class="ri-pushpin-line"></i>
         </div>
     </div>`;
-    roomMembersContainer.innerHTML += profile;
+        roomMembersContainer.innerHTML += profile;
     }
 
-    $('.end-mitting').on('click',()=>{
-        $('.leave-container').fadeIn('fast');
-    })
+    $(document).on('click', '.record', () => {
+        $('.record').addClass('stopRecord').removeClass('record');
+        startRecording();
+        $('.rocord-meeting').fadeIn();
+    });
+    
+    $(document).on('click', '.stopRecord', () => {
+        $('.rocord-meeting').fadeOut();
+        $('.stopRecord').removeClass('stopRecord').addClass('record');
+        mediaRecorder.stop();
+    });
+    
 
-    $('.cancel').on('click',()=>{
-        $('.leave-container').fadeOut('fast');
-    })
+    var mediaRecorder;
+    var chunks = [];
+    async function captureScreen(mediaContraints = {
+        video: true,
+        audio: false
+    }) {
+        const screenStream = await navigator.mediaDevices.getDisplayMedia(mediaContraints)
+        return screenStream;
+    }
 
-    $('.leave').on('click',()=>{
-        window.location.assign('/');
-    })
+    async function captureAudio(mediaContraints = {
+        audio: true,
+        video: false
+    }) {
+        const audioStream = await navigator.mediaDevices.getUserMedia(mediaContraints)
+        return audioStream;
+    }
+
+    async function startRecording() {
+        let screenStream = await captureScreen();
+        let audioStream = await captureAudio();
+        let stream = new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]);
+        mediaRecorder = new MediaRecorder(stream)
+        mediaRecorder.start();
+        mediaRecorder.onstop = (e) => {
+            var clipName = prompt('Enter a Name for your recording....');
+            stream.getTracks().forEach((track) => track.stop());
+            const blob = new Blob(chunks,{
+                type:'video/webm'
+            })
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = clipName +'webm';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(()=>{
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            },100);
+        }
+        mediaRecorder.ondataavailable = (e) => {
+            chunks.push(e.data);
+        }
+    }
 
     return {
         _init: function (uid, mid) {
