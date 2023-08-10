@@ -210,7 +210,7 @@ body {
     z-index: 1;
 }
 
-.active{
+.active {
     background-color: #817a7a;
 }
 
@@ -233,24 +233,28 @@ body {
     cursor: pointer;
     padding: 5px;
 }
-.container .right .member-container .body{
+
+.container .right .member-container .body {
     width: 100%;
     height: 80vh;
     padding: 5px 10px;
     overflow-y: scroll;
     background-color: #817a7a3e;
 }
-.container .right .member-container .body::-webkit-scrollbar{
+
+.container .right .member-container .body::-webkit-scrollbar {
     display: none;
 }
-.container .right .member-container .body .inner-body{
+
+.container .right .member-container .body .inner-body {
     display: flex;
     flex-direction: column;
     align-items: first end;
     gap: 5px;
     padding: 5px 5px;
 }
-.container .right .member-container .body .inner-body .profile{
+
+.container .right .member-container .body .inner-body .profile {
     width: 100%;
     height: 10vh;
     background-color: blanchedalmond;
@@ -262,17 +266,20 @@ body {
     padding: 0px 15px;
     box-shadow: 2px 5px 10px black;
 }
-.container .right .member-container .body .inner-body .profile:hover{
+
+.container .right .member-container .body .inner-body .profile:hover {
     cursor: pointer;
     background-color: #d4cccc;
 }
-.container .right .member-container .body .inner-body .profile .user_detailes{
+
+.container .right .member-container .body .inner-body .profile .user_detailes {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
 }
-.container .right .member-container .body .inner-body .profile .user_detailes img{
+
+.container .right .member-container .body .inner-body .profile .user_detailes img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -280,21 +287,25 @@ body {
     object-position: top;
     border: 1.5px solid #3f3b3b;
 }
-.container .right .member-container .body .inner-body .profile .user_detailes .name{
+
+.container .right .member-container .body .inner-body .profile .user_detailes .name {
     color: #000000;
     font-weight: 900;
 }
-.container .right .member-container .body .inner-body .profile .actions{
+
+.container .right .member-container .body .inner-body .profile .actions {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
 }
-.container .right .member-container .body .inner-body .profile .actions i{
+
+.container .right .member-container .body .inner-body .profile .actions i {
     font-size: 22px;
     cursor: pointer;
 }
-.container .right .member-container .body .inner-body .profile .actions i.ri-unpin-line{
+
+.container .right .member-container .body .inner-body .profile .actions i.ri-unpin-line {
     color: red;
 }
 
@@ -305,7 +316,8 @@ body {
     overflow-y: scroll;
     background-color: #817a7a3e;
 }
-.container .right .msg-container .body::-webkit-scrollbar{
+
+.container .right .msg-container .body::-webkit-scrollbar {
     display: none;
 }
 
@@ -324,20 +336,60 @@ body {
     color: #fff;
     max-width: 70%;
 }
-.container .right .msg-container .body .inner-body .recive .msg{
+
+.container .right .msg-container .body .inner-body .recive .msg {
     padding: 5px 0px;
 }
-.container .right .msg-container .body .inner-body .recive .time{
+
+.container .right .msg-container .body .inner-body .recive .time {
     font-size: 10px;
     display: none;
 }
-.container .right .msg-container .body .inner-body .recive:hover + .time{
+
+.container .right .msg-container .body .inner-body .recive:hover+.time {
     display: block;
 }
-.container .right .msg-container .body .inner-body .recive .sender{
+
+.container .right .msg-container .body .inner-body .recive .sender {
     font-size: 12px;
 }
 
+.container .right .msg-container .body .inner-body .recive-attchment{
+    background-color: #202C33;
+    align-self: flex-start;
+}
+.container .right .msg-container .body .inner-body .sent-attchment{
+    background-color: #005C4B;
+    align-self: flex-end;
+}
+.container .right .msg-container .body .inner-body .recive-attchment,
+.container .right .msg-container .body .inner-body .sent-attchment{
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;    
+    max-width: 70%;
+    height: 8vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.container .right .msg-container .body .inner-body .recive-attchment .empty,
+.container .right .msg-container .body .inner-body .sent-attchment .empty{
+    width: 1.5px;
+    height: 60%;
+    background-color: #000000;
+    opacity: .3;
+}
+.container .right .msg-container .body .inner-body .recive-attchment i,
+.container .right .msg-container .body .inner-body .sent-attchment i{
+    font-size: 22px;
+}
+.container .right .msg-container .body .inner-body .recive-attchment i:hover,
+.container .right .msg-container .body .inner-body .sent-attchment i:hover{
+    cursor: pointer;
+    color: #713333;
+}
 .container .right .msg-container .body .inner-body .sent {
     padding: 5px 10px;
     border-radius: 5px;
@@ -347,11 +399,11 @@ body {
     max-width: 70%;
 }
 
-sup{
+sup {
     color: #fff;
 }
 
-.black{
+.black {
     color: #000000;
 }
 
@@ -390,7 +442,7 @@ sup{
     cursor: pointer;
 }
 
-.leave-container{
+.leave-container {
     position: absolute;
     display: flex;
     align-items: center;
@@ -402,7 +454,8 @@ sup{
     width: 100vw;
     height: 100vh;
 }
-.leave-container .leave-box{
+
+.leave-container .leave-box {
     width: 35vw;
     height: 40vh;
     border: 2px solid rgb(130, 50, 50);
@@ -414,17 +467,20 @@ sup{
     flex-direction: column;
     box-shadow: 3px 10px 30px rgb(54, 51, 51);
 }
-.leave-container .leave-box h1{
+
+.leave-container .leave-box h1 {
     color: #fff;
 }
-.leave-container .leave-box .btn{
+
+.leave-container .leave-box .btn {
     padding: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
 }
-.leave-container .leave-box .btn button{
+
+.leave-container .leave-box .btn button {
     margin-top: 6vh;
     padding: 1.5vh 5vh;
     border-radius: 5px;
@@ -432,17 +488,19 @@ sup{
     border: none;
     cursor: pointer;
 }
-.leave-container .leave-box .btn button.leave{
+
+.leave-container .leave-box .btn button.leave {
     background-color: red;
     color: #fff;
 }
 
-.stopRecord{
+.stopRecord {
     color: red !important;
     background-color: #713333 !important;
     font-weight: bold;
 }
-.recording-indicater{
+
+.recording-indicater {
     position: absolute;
     top: 5vh;
     left: 5vw;
@@ -455,16 +513,18 @@ sup{
     gap: 5px;
     border-radius: 5px;
 }
-.recording-indicater i{
+
+.recording-indicater i {
     font-size: 27px;
     color: red;
     border-radius: 50%;
 }
-.recording-indicater h4{
+
+.recording-indicater h4 {
     color: #888080;
 }
 
-.meeting-detail{
+.meeting-detail {
     position: absolute;
     bottom: 10vh;
     left: 2vw;
@@ -474,7 +534,8 @@ sup{
     overflow: hidden;
     display: none;
 }
-.meeting-detail .top{
+
+.meeting-detail .top {
     width: 25vw;
     height: 7vh;
     background-color: #005C4B;
@@ -485,7 +546,8 @@ sup{
     justify-content: center;
     border-bottom: 1px solid #615c5c;
 }
-.meeting-detail .top .left{
+
+.meeting-detail .top .left {
     width: 50%;
     height: 100%;
     display: flex;
@@ -495,11 +557,13 @@ sup{
     gap: 10px;
     cursor: pointer;
 }
+
 .meeting-detail .top .left i,
-.meeting-detail .top .right i{
+.meeting-detail .top .right i {
     font-size: 20px;
 }
-.meeting-detail .top .right{
+
+.meeting-detail .top .right {
     width: 50%;
     height: 100%;
     display: flex;
@@ -509,40 +573,79 @@ sup{
     gap: 10px;
     cursor: pointer;
 }
-.meeting-detail .bot{
+
+.meeting-detail .box-1,
+.meeting-detail .bot {
     width: 25vw;
     height: 15vh;
     background-color: #202C33;
 }
-.meeting-detail .bot .text{
+.meeting-detail .box-1{
+    padding: 20px 20px;
+    overflow: hidden;
+}
+
+.meeting-detail .box-1 .input-file {
+    padding: 10px 10px;
+    border: 2px solid #005C4B;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+    color: #fff;
+    width: 80%;
+}
+.meeting-detail .box-1 .input{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+.meeting-detail .box-1 .input .sent-icon{
+    border: 1.5px solid red;
+    font-size: 22px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    
+}
+.meeting-detail .box-1 .input input:focus {
+    border-color: #0056b3;
+    outline: none;
+}
+
+.meeting-detail .bot .text {
     margin-left: 15px;
     color: #fff;
     opacity: .5;
     padding-top: 10px;
     font-size: 14px;
 }
-.meeting-detail .bot .orignal-link{
+
+.meeting-detail .bot .orignal-link {
     margin-left: 15px;
     color: #fff;
     opacity: .8;
     padding-top: 5px;
     font-size: 14px;
 }
-.meeting-detail .bot .link-btn{
+
+.meeting-detail .bot .link-btn {
     margin-left: 15px;
     color: #fff;
     font-size: 14px;
     border-radius: 2px;
     padding-top: 10px;
 }
-.meeting-detail .bot .link-btn span{
+
+.meeting-detail .bot .link-btn span {
     cursor: pointer;
     padding: 5px 7px;
     background-color: #005C4B;
     border-radius: 3px;
 }
 
-.tobActive{
+.tobActive {
     background-color: #fff !important;
     color: #000000 !important;
     transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);

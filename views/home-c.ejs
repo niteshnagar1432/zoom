@@ -26,7 +26,6 @@
                     </div>
                     <div class="body">
                         <div class="inner-body newMessageApairHere">
-
                         </div>
                     </div>
                     <div class="bottom">
@@ -97,13 +96,18 @@
         <div class="meeting-detail">
             <div class="top">
                 <div class="left link tobActive"><i class="ri-links-fill"></i> Link</div>
-                <div class="right attchment"><i class="ri-attachment-2"></i>
-                    Attchment</div>
+                <div class="right attchment"><i class="ri-attachment-2"></i>Attchment</div>
             </div>
             <div class="bot">
                 <div class="text">Meeting Link</div>
-                <div class="orignal-link">jhjhjidhhisiuhhi/779898</div>
+                <div class="orignal-link"></div>
                 <div class="link-btn"><span>Copy Link..!</span></div>
+            </div>
+            <div class="box-1 none">
+                <div class="input">
+                    <input type="file" class="input-file" placeholder="choose file">
+                    <i  class="ri-arrow-right-line sent-icon"></i>
+                </div>
             </div>
         </div>
         <script
@@ -142,11 +146,16 @@
             $('.link').toggleClass('tobActive');
             $('.attchment').toggleClass('tobActive');
             $('.attchment').removeClass('tobActive');
+            $('.bot').toggleClass('none');
+            $('.box-1').toggleClass('none');
         })
+        
         $(document).on('click','.attchment',()=>{
             $('.link').toggleClass('tobActive');
             $('.attchment').toggleClass('tobActive');
             $('.link').removeClass('tobActive');
+            $('.bot').toggleClass('none');
+            $('.box-1').toggleClass('none');
         })
 
         let URL = window.location.href;
@@ -156,26 +165,45 @@
         copyButton.addEventListener('click', () => {
             const textToCopy = contentToCopy.innerText;
             copyToClipboard(textToCopy);
-            alert('Content copied to clipboard!');
         });
 
         function copyToClipboard(text) {
-            // Create a temporary textarea element
             const textarea = document.createElement('textarea');
             textarea.value = text;
-
-            // Append the textarea to the document
             document.body.appendChild(textarea);
-
-            // Select the text inside the textarea
             textarea.select();
-
-            // Copy the selected text to the clipboard
             document.execCommand('copy');
-
-            // Remove the temporary textarea from the document
             document.body.removeChild(textarea);
         }
+
+        let sentAllAttech = document.querySelectorAll('.sent-attchment');
+
+        function downloadFIle(fileName) {
+            console.log('Download clicked:', fileName);
+
+            const fileUrl = `/images/uploads/${fileName}`; // Replace with the actual file URL
+
+            fetch(fileUrl)
+                .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Download error: ${response.status} ${response.statusText}`);
+                }
+                return response.blob();
+                })
+                .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `w-${fileName}`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                console.error('Error:', error);
+                });
+            }
+
+
     </script>
     </body>
 </html>

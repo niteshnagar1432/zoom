@@ -127,7 +127,7 @@ let AppProcess = (() => {
             $('#video-cam-on-off').addClass('ri-camera-off-line')
         }
 
-        if(newState == videoStates.screen){
+        if (newState == videoStates.screen) {
             $('#local-vdo').removeClass('none');
             $('.display-none').addClass('none');
             $('.screen-share-on-off').addClass('active');
@@ -400,6 +400,7 @@ let MyApp = (() => {
         })
     }
 
+
     socket.on('newMessage', (data) => {
         let time = new Date();
         let nTime = time.toLocaleString('en-US', {
@@ -416,6 +417,19 @@ let MyApp = (() => {
         </div>`;
         msgContainer.innerHTML += newMsg;
     })
+
+    socket.on('newAttechment', (data) => {
+        let msgContainer = document.querySelector('.newMessageApairHere');
+        let newMsg = `<div class="recive-attchment"><i onclick="downloadFIle('${data.filename}')" class="ri-download-2-line"></i> <div class="empty"></div> ${data.filename}</div>`;
+        msgContainer.innerHTML += newMsg;
+    });
+
+    socket.on('selfAttechment', (data) => {
+        let msgContainer = document.querySelector('.newMessageApairHere');
+        let newMsg = `<div class="sent-attchment" data-filename="${data.filename}"><i onclick="downloadFIle('${data.filename}')" class="ri-download-2-line"></i> <div class="empty"></div> ${data.filename}</div>`;
+        msgContainer.innerHTML += newMsg;
+    });
+
 
     socket.on('selfMessage', (data) => {
         let time = new Date();
@@ -491,13 +505,13 @@ let MyApp = (() => {
         startRecording();
         $('.rocord-meeting').fadeIn();
     });
-    
+
     $(document).on('click', '.stopRecord', () => {
         $('.rocord-meeting').fadeOut();
         $('.stopRecord').removeClass('stopRecord').addClass('record');
         mediaRecorder.stop();
     });
-    
+
 
     var mediaRecorder;
     var chunks = [];
@@ -526,25 +540,60 @@ let MyApp = (() => {
         mediaRecorder.onstop = (e) => {
             var clipName = prompt('Enter a Name for your recording....');
             stream.getTracks().forEach((track) => track.stop());
-            const blob = new Blob(chunks,{
-                type:'video/webm'
+            const blob = new Blob(chunks, {
+                type: 'video/webm'
             })
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = clipName +'webm';
+            a.download = clipName + 'webm';
             document.body.appendChild(a);
             a.click();
-            setTimeout(()=>{
+            setTimeout(() => {
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
-            },100);
+            }, 100);
         }
         mediaRecorder.ondataavailable = (e) => {
             chunks.push(e.data);
         }
     }
+
+    const uploadButton = document.querySelector('.sent-icon');
+    const fileInput = document.querySelector('.input-file');
+
+    uploadButton.addEventListener('click', async function () {
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('Please select a file.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('/upload/doc', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const responseData = await response.json();
+
+            console.log(responseData);
+            if (responseData) {
+                socket.emit('newAttechment', {
+                    filename: responseData.fileName
+                })
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    });
 
     return {
         _init: function (uid, mid) {

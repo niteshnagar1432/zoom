@@ -41,7 +41,6 @@ io.on("connection", function (socket) {
 
 
   socket.on('SDPProcess', (data) => {
-    console.log(data);
     io.to(data.to_connid).emit('SDPProcess', {
       message: data.message,
       from_connid: socket.id
@@ -49,7 +48,6 @@ io.on("connection", function (socket) {
   })
 
   socket.on('sendMessage',(data)=>{
-    console.log(data);
     let mUser = userConnections.find((user)=>{
       return user.currentSocket == socket.id;
     })
@@ -73,8 +71,32 @@ io.on("connection", function (socket) {
 
   })
 
+  socket.on('newAttechment',(data)=>{
+
+    let mUser = userConnections.find((user)=>{
+      return user.currentSocket == socket.id;
+    })
+    if(mUser){
+      let roomId = mUser.roomId;
+      let from = mUser.displayName;
+      let senderSocket = mUser.currentSocket;
+      let list = userConnections.filter((user)=>{
+        return user.roomId == roomId;
+      })
+
+      list.forEach((user)=>{
+        if(user.currentSocket != senderSocket){
+          io.to(user.currentSocket).emit('newAttechment',{sender:from,filename:data.filename});
+        }else{
+          io.to(user.currentSocket).emit('selfAttechment',{sender:from,filename:data.filename});
+        }
+      })
+
+    }
+    console.log(data);
+  })
+
   socket.on('disconnect', () => {
-    console.log('user Disconnected');
   
     var disConnectUser = userConnections.find((user) => {
       return user.currentSocket == socket.id;
@@ -82,7 +104,6 @@ io.on("connection", function (socket) {
   
     if (disConnectUser) {
       var connectionId = disConnectUser.roomId;
-      console.log(connectionId);
   
       var remainingUsers = userConnections.filter((u) => {
         return u.currentSocket != disConnectUser.currentSocket;
