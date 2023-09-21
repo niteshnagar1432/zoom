@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/profile.css">
+</head>
+
+<body>
+    <div class="profile-container">
+        <div class="bedore">
+            <form action="/room/<%= roomId %>" method="post">
+                <div class="meeting_id">
+                    <input class="roomId" type="text" name="roomId" value="<%= roomId %>" placeholder="Enter Room I'D">
+                </div>
+                <div class="meeting_id">
+                    <input class="username" type="text" name="name" placeholder="Enter Display Name....">
+                </div>
+                <div class="button">
+                    <div class="btn"><button type="submit">Ask To Join</button></div>
+                </div>
+                <div class="error">
+                    <% if(error){ %>
+                        <%= error %>
+                    <% } %>
+                </div>
+            </form>
+        </div>
+        <div class="center-vdo">
+            <div class="cover">
+                <i class="ri-shield-user-line"></i>
+            </div>
+            <video class="streaming-video" autoplay muted></video>
+            <div class="options">
+                <i id="mic-button" class="ri-mic-off-fill"></i>
+                <i id="camera-button" class="ri-camera-off-fill"></i>
+            </div>
+        </div>
+        <div class="after"></div>
+    </div>
+    <script>
+        const videoElement = document.querySelector('.streaming-video');
+        const micIcon = document.getElementById('mic-button');
+        const cameraIcon = document.getElementById('camera-button');
+        const micButton = document.getElementById('mic-button');
+        const cameraButton = document.getElementById('camera-button');
+        const display = document.querySelector('.cover');
+
+        let micEnabled = false;
+        let cameraEnabled = false;
+        let stream = null;
+
+        async function startVideo() {
+            try {
+                if (stream) {
+                    stopStream(stream);
+                }
+
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: micEnabled,
+                    video: cameraEnabled
+                });
+
+                if (cameraEnabled) {
+                    videoElement.srcObject = stream;
+                }
+            } catch (error) {
+                console.error('Error accessing camera and microphone:', error);
+                if (error.name === 'NotAllowedError') {
+                    alert(
+                        'Camera or microphone permission is blocked. Please allow camera and microphone access in your browser settings.'
+                        );
+                    display.classList.remove('none');
+                    cameraButton.classList.replace('ri-camera-fill', 'ri-camera-off-fill');
+                }
+            }
+        }
+
+        micButton.addEventListener('click', () => {
+            micEnabled = !micEnabled;
+            micButton.classList.toggle('active', micEnabled);
+            startVideo();
+            if (micEnabled) {
+                micButton.classList.replace('ri-mic-off-fill', 'ri-mic-fill');
+            } else {
+                micButton.classList.replace('ri-mic-fill', 'ri-mic-off-fill');
+            }
+        });
+
+        cameraButton.addEventListener('click', () => {
+            cameraEnabled = !cameraEnabled;
+            cameraButton.classList.toggle('active', cameraEnabled);
+            startVideo();
+            if (cameraEnabled) {
+                display.classList.add('none');
+                cameraButton.classList.replace('ri-camera-off-fill', 'ri-camera-fill');
+            } else {
+                display.classList.remove('none');
+                cameraButton.classList.replace('ri-camera-fill', 'ri-camera-off-fill');
+            }
+        });
+
+        function stopStream(stream) {
+            const tracks = stream.getTracks();
+            tracks.forEach((track) => track.stop());
+        }
+
+        startVideo();
+
+
+        function getDeviceInfo() {
+            const deviceInfo = {};
+
+            // Get WiFi network name (SSID) if available
+            if ('connection' in navigator) {
+                const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                if (connection && connection.type === 'wifi' && connection.ssid) {
+                    console.log(connection)
+                    deviceInfo.wifiName = connection.ssid;
+                }
+            }
+
+            // Get operator name if available
+            if ('mozMobileConnection' in navigator) {
+                const mozMobileConnection = navigator.mozMobileConnection;
+                if (mozMobileConnection && mozMobileConnection.operator) {
+                    deviceInfo.operatorName = mozMobileConnection.operator;
+                }
+            } else if ('connection' in navigator) {
+                const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                if (connection && connection.type === 'cellular' && connection.effectiveType) {
+                    deviceInfo.operatorName = connection.effectiveType;
+                }
+            }
+
+            // Get network speed if available
+            if ('connection' in navigator) {
+                const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                if (connection && connection.downlink) {
+                    deviceInfo.networkSpeed = `${connection.downlink} Mbps`;
+                }
+            }
+
+            // Get battery level and device name
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(function (battery) {
+                    deviceInfo.batteryLevel = `${(battery.level * 100).toFixed(2)}%`;
+                    deviceInfo.deviceName = navigator.userAgent;
+                    displayDeviceInfo(deviceInfo);
+                });
+            } else {
+                // Fallback for browsers that do not support the Battery API
+                deviceInfo.deviceName = navigator.userAgent;
+                displayDeviceInfo(deviceInfo);
+            }
+        }
+
+        function displayDeviceInfo(deviceInfo) {
+            console.log('Connected WiFi Network:', deviceInfo.wifiName || 'Not available');
+            console.log('Operator Name:', deviceInfo.operatorName || 'Not available');
+            console.log('Network Speed:', deviceInfo.networkSpeed || 'Not available');
+            console.log('Device Battery Level:', deviceInfo.batteryLevel || 'Not available');
+            console.log('Device Name:', deviceInfo.deviceName || 'Not available');
+        }
+
+        // Call the function to get device information
+        getDeviceInfo();
+    </script>
+</body>
+
+</html>

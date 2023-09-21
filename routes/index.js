@@ -28,6 +28,15 @@ router.get('/room/:id',(req,res)=>{
   res.render('home-c',{roomId});
 })
 
+router.post('/room/:id',(req,res)=>{
+  let {roomId,name} = req.body;
+  if(roomId !== '' && name !== ''){
+    res.render('home-c',{roomId,name});
+  }else{
+    res.render('profile',{roomId,error:"All Fiel's are required...express.!"});
+  }
+})
+
 router.post('/upload/doc', upload.single('file'), (req, res) => {
   res.status(200).json({
     status:'sucess',
@@ -41,5 +50,10 @@ router.get('/images/uploads/:fileName',(req,res)=>{
   const filePath = `./public/images/uploads/${fileName}`;
   res.download(filePath, `w-${fileName}`);
 });
+
+router.get('/profile/:roomId',(req,res)=>{
+  let roomId = req.params.roomId;
+  res.render('profile',{roomId,error:''});
+})
 
 module.exports = router;

@@ -21,11 +21,11 @@
         $(document).ready(()=>{
             $('.join-btn').on('click',()=>{
                 let meeting_code = $('.meeting-code').val();
-                window.location.assign(`/room/${meeting_code}`);
+                window.location.assign(`/profile/${meeting_code}`);
             });
             $('.new-metting').on('click',()=>{
                 let meeting_code = Math.floor(Math.random() * 100000000);
-                window.location.assign('/room/'+meeting_code);
+                window.location.assign('/profile/'+meeting_code);
             });
         })
     </script> 

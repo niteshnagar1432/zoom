@@ -14,13 +14,34 @@ io.on("connection", function (socket) {
       return user.roomId == data.roomId
     });
 
-    userConnections.push({
-      currentSocket: socket.id,
-      displayName: data.displayName,
-      roomId: data.roomId
-    });
+    if(userConnections.length !== 0){
+      userConnections.push({
+        currentSocket: socket.id,
+        displayName: data.displayName,
+        roomId: data.roomId,
+        isAdmin:false
+      });
+    }else{
+      userConnections.push({
+        currentSocket: socket.id,
+        displayName: data.displayName,
+        roomId: data.roomId,
+        isAdmin:true
+      });
+    }
+
     let userCount = userConnections.length;
-    console.log(userCount);
+
+    if(userConnections.length == 1){
+      io.to(socket.id).emit('isAdmin',{
+        isAdmin:true
+      })
+    }else{
+      io.to(socket.id).emit('isAdmin',{
+        isAdmin:false
+      })
+    }
+    
     io.emit('other_info_meeting', {
       otherUserId: data.displayName,
       connId: socket.id,

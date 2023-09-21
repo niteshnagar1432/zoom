@@ -1,0 +1,128 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+.profile-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: #2E2E4D;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-container .bedore {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-container .bedore form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+}
+.profile-container .bedore form .meeting_id{
+    width: 100%;
+    height: 10vh;
+    background-color: #555050;
+    overflow: hidden;
+    border-radius: 7px;
+    margin-top: 10px;
+}
+.profile-container .bedore form .meeting_id input{
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding-left: 20px;
+    color: aliceblue;
+    font-size: 22px;
+}
+
+.profile-container .center-vdo {
+    width: 30%;
+    height: 90%;
+    background-color: #555050;
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+}
+.profile-container .center-vdo video{
+    object-fit: contain;
+    object-position: center;
+}
+.profile-container .center-vdo .cover{
+    width: 100%;
+    height: 90vh;
+    background-color: #716c6c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-container .center-vdo .cover i{
+    font-size: 42px;
+    padding: 15px;
+    background-color: #2E2E4D;
+    color: antiquewhite;
+    border-radius: 7px;
+}
+
+.profile-container .center-vdo .options {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 10vh;
+    background: linear-gradient(to bottom,rgb(148, 113, 113),rgb(82, 77, 77),rgb(203, 75, 75));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-top: 1.5px solid #ffff;
+}
+
+.profile-container .center-vdo .options i{
+    font-size: 22px;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #2E2E4D;
+    color: aliceblue;
+    cursor: pointer;
+}
+
+.profile-container .after {
+    width: 30%;
+    height: 100%;
+}
+.none{
+    display: none !important;
+}
+.btn{
+    padding: 10px 20px;
+    border-radius: 30px;
+    background-color: greenyellow;
+    cursor: pointer;
+    font-size: 18px;
+}
+.btn button{
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+.error{
+    color: red;
+}

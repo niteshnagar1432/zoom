@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connected WiFi Info</title>
+</head>
+
+<body>
+    <h1>Connected WiFi Information</h1>
+    <p id="wifi-info">Fetching WiFi information...</p>
+
+    <script>
+        function getConnectedWiFiInfo() {
+            if (navigator.onLine) {
+                return 'Connected to the internet';
+            } else {
+                return 'Not connected to the internet';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const wifiInfoElement = document.getElementById('wifi-info');
+            const wifiStatus = getConnectedWiFiInfo();
+            wifiInfoElement.textContent = wifiStatus;
+        });
+
+        document.addEventListener("deviceready", onDeviceReady, false);
+
+        function onDeviceReady() {
+            WifiWizard2.getConnectedSSID(
+                function (ssid) {
+                    // ssid is the name of the connected WiFi network
+                    const wifiInfoElement = document.getElementById('wifi-info');
+                    wifiInfoElement.textContent = `Connected WiFi Network: ${ssid}`;
+                },
+                function (error) {
+                    console.error("Error getting WiFi information: " + error);
+                }
+            );
+        }
+
+        onDeviceReady();
+
+    </script>
+</body>
+
+</html>

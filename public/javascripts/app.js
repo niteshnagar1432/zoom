@@ -367,10 +367,20 @@ let MyApp = (() => {
 
         socket.on('other_info_meeting', (user) => {
             if (user) {
-                console.log(user)
                 addUser(user.otherUserId, user.connId);
                 AppProcess.setNewConnection(user.connId);
                 document.querySelector('.roomMembers').innerHTML = user.userCount;
+            }
+        })
+
+        socket.on('isAdmin',(user)=>{
+            if(user){
+                console.log(user)
+                if(user.isAdmin){
+                    document.querySelector('.record').classList.remove('none');
+                }else{
+                    document.querySelector('.record').classList.add('none');
+                }
             }
         })
 
